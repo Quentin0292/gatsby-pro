@@ -1,10 +1,20 @@
 import React from "react"
 import { Link, graphql } from "gatsby"
 
+import Img from "gatsby-image"
+
+import RehypeReact from 'rehype-react'
+
 import Bio from "../components/bio"
 import Layout from "../components/layout"
+import MailchimpForm from "../components/MailchimpForm"
 import SEO from "../components/seo"
 import { rhythm, scale } from "../utils/typography"
+
+const renderAst = new RehypeReact({
+  createElement: React.createElement,
+  components: { 'bio': Bio }
+}).Compiler
 
 class BlogPostTemplate extends React.Component {
   render() {
@@ -35,12 +45,15 @@ class BlogPostTemplate extends React.Component {
         >
           {post.frontmatter.date}
         </p>
-        <div dangerouslySetInnerHTML={{ __html: post.html }} />
+        <Img fluid={post.frontmatter.image.childImageSharp.fluid} />
+        {/* <div dangerouslySetInnerHTML={{ __html: post.html }} /> */}
+        <div>{renderAst(post.htmlAst)}</div>
         <hr
           style={{
             marginBottom: rhythm(1),
           }}
         />
+        <MailchimpForm />
         <Bio />
 
         <ul
@@ -86,10 +99,18 @@ export const pageQuery = graphql`
       id
       excerpt(pruneLength: 160)
       html
+      htmlAst
       frontmatter {
         title
         date(formatString: "MMMM DD, YYYY")
         description
+        image {
+          childImageSharp {
+            fluid(maxWidth: 630) {
+              ...GatsbyImageSharpFluid_withWebp
+            }
+          }
+        }
       }
     }
   }

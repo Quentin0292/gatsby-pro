@@ -23,10 +23,12 @@ module.exports = {
         name: `assets`,
       },
     },
+    'gatsby-plugin-catch-links',
     {
       resolve: `gatsby-transformer-remark`,
       options: {
         plugins: [
+          'gatsby-remark-component',
           {
             resolve: `gatsby-remark-images`,
             options: {
@@ -42,6 +44,20 @@ module.exports = {
           `gatsby-remark-prismjs`,
           `gatsby-remark-copy-linked-files`,
           `gatsby-remark-smartypants`,
+          {
+            resolve: 'gatsby-remark-external-links',
+            options: {
+              target: '_blank'
+            }
+          },
+          {
+            resolve: '@raae/gatsby-remark-oembed',
+            options: {
+              providers: {
+                include: ['Twitter', 'YouTube']
+              }
+            }
+          }
         ],
       },
     },
